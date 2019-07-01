@@ -11,6 +11,7 @@ import { DOCUMENT } from '@angular/common';
 })
 export class UsuariosComponent implements OnInit {
 
+  usuario: Usuario = null;
   usuarios: Usuario[] = [];
   desde: number = 0;
   mostrar: number = 10;
@@ -33,8 +34,9 @@ export class UsuariosComponent implements OnInit {
 
     this._usuarioService.cargarUsuarios( this.desde, this.mostrar )
               .subscribe( (resp: any) => {
-                this.totalRegistros = resp.length;
-                this.usuarios = resp;
+                console.log('resp', resp);
+                this.totalRegistros = resp.total;
+                this.usuarios = resp.users;
                 this.cargando = false;
               });
 
@@ -43,7 +45,9 @@ export class UsuariosComponent implements OnInit {
   cambiarDesde( valor: number ) {
     const desde = this.desde + valor;
     console.log(desde);
-
+    if ( desde >= this.totalRegistros ) {
+      return;
+    }
     if ( desde < 0 ) {
       return;
     }
@@ -62,8 +66,8 @@ export class UsuariosComponent implements OnInit {
       focusConfirm: false,
       preConfirm: () => {
         return [
-          document.getElementById('swal-input1').value,
-          document.getElementById('swal-input2').value
+          (document.getElementById('swal-input1') as HTMLInputElement).value,
+          (document.getElementById('swal-input2') as HTMLInputElement).value
         ];
       }
     });
@@ -95,6 +99,37 @@ export class UsuariosComponent implements OnInit {
                   }
                 );
     }
+
+  }
+
+  agregarPermisoUsuario( id: string, claim: string ) {
+
+
+    this._usuarioService.obtenerUsuario( id )
+            .subscribe( (resp: Usuario) => {
+
+              this.usuario = new Usuario(resp.id, resp.name, resp.password, resp.claims);
+
+              const index  = (this.usuario.claims).findIndex(obj => obj.type === claim);
+
+              if (index >= 0) {
+                  console.log('Existe Xd');
+                  Swal.fire({
+                    type: 'error',
+                    title: 'Upsss...',
+                    text: 'El usuario ya tiene el permiso (' + claim + ')'
+                  });
+                  return;
+              } else {
+                  console.log('No Existe');
+                  this._usuarioService.agregarPermisoUsuario(id, claim)
+                  .subscribe( data => {
+                                console.log(data);
+                                this.cargarUsuarios();
+                              });
+              }
+
+            });
 
   }
 
