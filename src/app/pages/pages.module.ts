@@ -8,6 +8,8 @@ import { PAGES_ROUTES } from './pages.routes';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
+
 
 // Componente Principal
 import { PagesComponent } from './pages.component';
@@ -32,14 +34,16 @@ import { TransaccionesComponent } from './cuentas/transacciones/transacciones.co
     TransaccionesComponent
   ],
   exports: [
-    DashboardComponent
+    DashboardComponent,
+    AngularMultiSelectModule
   ],
   imports: [
     CommonModule,
     SharedModule,
     PAGES_ROUTES,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AngularMultiSelectModule
   ],
   providers: [],
   bootstrap: []

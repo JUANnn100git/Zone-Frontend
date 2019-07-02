@@ -19,13 +19,38 @@ export class UsuariosComponent implements OnInit {
   totalRegistros: number = 0;
   cargando: boolean = true;
 
-
+  dropdownList = [];
+  selectedItems = [];
+  dropdownSettings = {};
 
   constructor( public _usuarioService: UsuarioService,
                @Inject(DOCUMENT) private document: Document ) { }
 
   ngOnInit() {
+
+    this.inicializarDropDownList();
     this.cargarUsuarios();
+
+  }
+
+  inicializarDropDownList() {
+    this.dropdownList = [
+      {id: 1, itemName: 'canAccessAccounts'},
+      {id: 2, itemName: 'canSaveAccount'},
+      {id: 3, itemName: 'canAddAccount'},
+      {id: 4, itemName: 'canAccessCustomers'},
+      {id: 5, itemName: 'canSaveCustomer'},
+      {id: 6, itemName: 'canAddCustomer'}
+    ];
+    this.selectedItems = [ ];
+    this.dropdownSettings = {
+          singleSelection: false,
+          text: 'Seleccionar Permisos',
+          selectAllText: 'Seleccionar Todos',
+          unSelectAllText: 'Quitar Todos',
+          enableSearchFilter: true,
+          classes: 'myclass custom-class'
+    };
   }
 
   cargarUsuarios() {
@@ -131,6 +156,22 @@ export class UsuariosComponent implements OnInit {
 
             });
 
+  }
+
+
+  onItemSelect(item: any) {
+    console.log(item);
+    console.log(this.selectedItems);
+  }
+  OnItemDeSelect(item: any) {
+      console.log(item);
+      console.log(this.selectedItems);
+  }
+  onSelectAll(items: any) {
+      console.log(items);
+  }
+  onDeSelectAll(items: any) {
+      console.log(items);
   }
 
 }
